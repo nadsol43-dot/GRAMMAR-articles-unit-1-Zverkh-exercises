@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Unit 1 · Артикли — интерактивные упражнения 1.1 и 1.2</title>
+<style>
+  :root{
+    --paper:#F7F2E8; --card:#FFFCF5; --ink:#23252B; --line:#E4DCCB;
+    --a:#DD4B26; --the:#27348B; --zero:#6B7280;
+    --ok:#1E8E3E; --bad:#D93025; --warn:#F29900;
+    --sans:'Segoe UI', system-ui, -apple-system, Roboto, 'Helvetica Neue', Arial, sans-serif;
+    --serif:Georgia, 'Times New Roman', 'DejaVu Serif', serif;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  body{background:var(--paper); color:var(--ink); font-family:var(--sans);}
+  .wrap{max-width:960px; margin:0 auto; padding:0 20px;}
+
+  /* ---------- hero ---------- */
+  header.hero{position:relative; overflow:hidden; border-bottom:1px solid var(--line); padding:34px 0 26px;}
+  .kicker{display:inline-block; background:#40434B; color:#fff; font:800 12px/1 var(--sans); letter-spacing:1.6px; padding:7px 12px; border-radius:6px; margin-bottom:14px;}
+  h1{font:800 34px/1.15 var(--sans); letter-spacing:-.5px;}
+  h1 em{font:italic 700 34px/1 var(--serif); color:var(--the);}
+  .sub{margin-top:10px; font:400 15.5px/1.55 var(--sans); color:#5C5648; max-width:640px;}
+  .legend{display:flex; flex-wrap:wrap; gap:10px; margin-top:16px;}
+  .chip{display:inline-flex; align-items:center; gap:9px; background:var(--card); border:1px solid var(--line); border-radius:999px; padding:6px 14px 6px 6px; font:600 13px var(--sans); color:#4A4436;}
+  .chip b{font:700 14px var(--serif); color:#fff; border-radius:999px; padding:4px 11px;}
+  .chip.ca b{background:var(--a);} .chip.ct b{background:var(--the);} .chip.cz b{background:var(--zero);}
+  .glyphs{position:absolute; right:26px; top:14px; display:flex; gap:20px; pointer-events:none; user-select:none;}
+  .glyphs span{font:italic 700 92px/1 var(--serif); opacity:.13;}
+  .glyphs span:nth-child(1){color:var(--a); transform:rotate(-8deg);}
+  .glyphs span:nth-child(2){color:var(--the); transform:rotate(5deg) translateY(8px);}
+  .glyphs span:nth-child(3){color:var(--zero); transform:rotate(-4deg);}
+
+  /* ---------- toolbar ---------- */
+  .toolbar{position:sticky; top:0; z-index:50; background:rgba(247,242,232,.94); backdrop-filter:blur(6px); border-bottom:1px solid var(--line); padding:10px 0;}
+  .tb-row{display:flex; align-items:center; gap:10px; flex-wrap:wrap;}
+  .btn{font:700 14px var(--sans); border-radius:10px; padding:9px 16px; cursor:pointer; border:1.5px solid transparent; transition:.15s;}
+  .btn:active{transform:translateY(1px);}
+  .btn-primary{background:var(--ink); color:#fff;}
+  .btn-primary:hover{box-shadow:0 4px 14px rgba(35,37,43,.28); transform:translateY(-1px);}
+  .btn-outline{background:#fff; border-color:#C9C0AC; color:#4A4436;}
+  .btn-outline:hover{border-color:#8A8272;}
+  .btn-ghost{background:transparent; color:#6B6353;}
+  .btn-ghost:hover{background:#EFE8D8;}
+  .switch{display:inline-flex; align-items:center; gap:8px; font:600 13px var(--sans); color:#4A4436; cursor:pointer; margin-left:auto;}
+  .switch input{width:16px; height:16px; accent-color:var(--the); cursor:pointer;}
+  .tb-row2{display:flex; align-items:center; gap:12px; margin-top:9px;}
+  .bar{height:8px; background:#E7DFCC; border-radius:99px; overflow:hidden; flex:1;}
+  .bar i{display:block; height:100%; width:0; background:linear-gradient(90deg, var(--a), var(--the)); transition:width .35s;}
+  .bar.full i{background:var(--ok);}
+  #scoreLbl{font:700 13px var(--sans); color:#4A4436; white-space:nowrap;}
+
+  /* ---------- sections ---------- */
+  main{padding:26px 0 10px;}
+  .card{background:var(--card); border:1px solid var(--line); border-radius:16px; padding:6px 24px 18px; margin-bottom:22px; box-shadow:0 2px 10px rgba(60,50,30,.06);}
+  .card-head{display:flex; align-items:center; gap:12px; padding:16px 0 12px; border-bottom:2px solid #40434B; flex-wrap:wrap;}
+  .tag{background:#40434B; color:#fff; font:800 13px var(--sans); letter-spacing:.4px; padding:5px 11px; border-radius:6px;}
+  .instr{font:600 14.5px var(--sans); color:#4A4436;}
+  .wa{color:var(--a);} .wt{color:var(--the);} .wz{color:var(--zero);}
+  .score-chip{margin-left:auto; font:700 12.5px var(--sans); color:#6B6353; background:#F1EADB; padding:5px 12px; border-radius:999px; white-space:nowrap;}
+
+  .item{display:grid; grid-template-columns:34px 1fr; gap:4px 12px; padding:10px 0; border-bottom:1px dashed var(--line);}
+  .item:last-child{border-bottom:none;}
+  .num{font:700 13px var(--sans); color:#8A8272; background:#F1EADB; border-radius:8px; height:26px; display:flex; align-items:center; justify-content:center; margin-top:5px; transition:.2s;}
+  .item.done .num{background:var(--ok); color:#fff;}
+  .sen{font:400 17.5px/2.3 var(--serif); color:var(--ink);}
+  .note{grid-column:2; display:none; font:400 13.5px/1.5 var(--sans); color:#5C5648; background:#FBF7EC; border-left:3px solid #C9C0AC; border-radius:0 8px 8px 0; padding:7px 12px; margin:2px 0 4px;}
+  .note b{color:#8A6D3B; font-weight:700;}
+  .item.done .note, body.revealed .note{display:block;}
+
+  /* ---------- blanks ---------- */
+  select.blank{
+    appearance:none; -webkit-appearance:none; font:600 14.5px var(--sans);
+    border:1.5px dashed #C9C0AC; border-radius:9px; background:#fff url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='6'><path d='M1 1l4 4 4-4' stroke='%238A8272' stroke-width='1.6' fill='none' stroke-linecap='round'/></svg>") no-repeat right 9px center;
+    color:#9A917C; padding:3px 26px 4px 12px; margin:0 3px; min-width:64px; cursor:pointer; vertical-align:middle; transition:.15s;
+  }
+  select.blank:hover{border-color:#8A8272;}
+  select.blank:focus-visible{outline:2px solid var(--the); outline-offset:1px;}
+  select.blank.cap{text-transform:capitalize;}
+  select.blank[data-v="a"], select.blank[data-v="an"]{background-color:#FBE9E3; border:1.5px solid var(--a); color:#B33A1B;}
+  select.blank[data-v="the"]{background-color:#E8EAF6; border:1.5px solid var(--the); color:var(--the);}
+  select.blank[data-v="Ø"]{background-color:#ECECEA; border:1.5px solid var(--zero); color:#4B5563;}
+  select.blank.ok{box-shadow:0 0 0 2.5px rgba(30,142,62,.30); border-color:var(--ok);}
+  select.blank.wrong{box-shadow:0 0 0 2.5px rgba(217,48,37,.30); border-color:var(--bad); animation:shake .3s;}
+  select.blank.miss{box-shadow:0 0 0 2.5px rgba(242,153,0,.30); border-color:var(--warn);}
+  select.blank:disabled{cursor:default; opacity:.92;}
+  @keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-3px)}75%{transform:translateX(3px)}}
+
+  /* ---------- toast & footer ---------- */
+  #toast{position:fixed; left:50%; top:14px; transform:translateX(-50%) scale(.9); opacity:0; pointer-events:none; transition:.25s; background:var(--ok); color:#fff; padding:11px 22px; border-radius:999px; font:700 14.5px var(--sans); box-shadow:0 8px 24px rgba(0,0,0,.25); z-index:99;}
+  #toast.show{opacity:1; transform:translateX(-50%) scale(1);}
+  #toast.dark{background:#40434B;}
+  footer{padding:8px 0 40px; font:400 12.5px/1.6 var(--sans); color:#8A8272;}
+  @media (max-width:640px){
+    .glyphs{display:none;}
+    h1{font-size:27px;} h1 em{font-size:27px;}
+    .sen{font-size:16px;}
+    .switch{margin-left:0;}
+  }
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="glyphs" aria-hidden="true"><span>a</span><span>the</span><span>Ø</span></div>
+  <div class="wrap">
+    <div class="kicker">UNIT 1 · EXERCISES · ИНТЕРАКТИВ</div>
+    <h1>Артикли с исчисляемыми существительными: <em>a / an · the · Ø</em></h1>
+    <p class="sub">Выберите нужный артикль в каждом пропуске (упражнения 1.1 и 1.2). Цвет подсказывает выбор, а после проверки появится пояснение к каждому предложению.</p>
+    <div class="legend">
+      <span class="chip ca"><b>a / an</b> «какой-то, один из» — первое упоминание</span>
+      <span class="chip ct"><b>the</b> «тот самый» — повторное или уточнённое</span>
+      <span class="chip cz"><b>Ø</b> «много» или «место занято» — мн. ч. без уточнения</span>
+    </div>
+  </div>
+</header>
+
+<div class="toolbar">
+  <div class="wrap">
+    <div class="tb-row">
+      <button class="btn btn-primary" id="checkBtn">Проверить</button>
+      <button class="btn btn-outline" id="revealBtn">Показать ответы</button>
+      <button class="btn btn-ghost" id="resetBtn">Сбросить</button>
+      <label class="switch"><input type="checkbox" id="immChk"> проверять сразу при выборе</label>
+    </div>
+    <div class="tb-row2">
+      <div class="bar" id="bar"><i id="barFill"></i></div>
+      <span id="scoreLbl">Верно: 0 / 0</span>
+    </div>
+  </div>
+</div>
+
+<main><div class="wrap" id="sections"></div></main>
+
+<footer><div class="wrap">Сделано по упражнениям Unit 1 учебника. <a href="index.html" style="color:inherit">упражнения Unit 2 →</a>  Подсветка пропусков совпадает с выбором: оранжевый — a/an, синий — the, серый — Ø (без артикля). Пояснения к предложениям — редакция пособия-плаката.</div></footer>
+
+<div id="toast" role="status"></div>
+
+<script>
+"use strict";
+/* ------------------------------------------------ data ------------------------------------------------ */
+const DATA = [
+  { id:"1.1", instr:'Вставьте <b class="wa">a / an</b> или <b class="wt">the</b>.', opts:["a","an","the"], items:[
+    { n:1,  seg:["I'm looking for ",0," job. I didn't like ",1," job I had."], ans:["a","the"],
+      note:"первое упоминание — a; второе упоминание (та самая работа, что была) — the." },
+    { n:2,  seg:["Kate is wearing ",0," new dress today. ",1," dress is nice."], ans:["a","the"],
+      note:"платье называют впервые — a; дальше речь о том же платье — the." },
+    { n:3,  seg:["He has ",0," nice house. There is ",1," beautiful garden in front of ",2," house."], ans:["a","a","the"],
+      note:"house и garden упоминаются впервые — a; в конце house уже назван — the." },
+    { n:4,  seg:["This is ",0," interesting book. ",1," book is ",2," love story."], ans:["an","the","a"],
+      note:"an перед гласным звуком [ɪ]; book во втором предложении — уже известная — the; love story упоминается впервые — a." },
+    { n:5,  seg:[0," text he is translating is rather difficult."], ans:["the"],
+      note:"уточнение: не любой текст, а тот, который он переводит (определение he is translating) — the." },
+    { n:6,  seg:["Is ",0," bag new? I like ",1," bag."], ans:["the","the"],
+      note:"оба говорящих видят, о какой сумке речь (ясно из ситуации) — the." },
+    { n:7,  seg:["He is ",0," engineer. He says ",1," profession is interesting."], ans:["an","the"],
+      note:"профессия называется впервые — an; дальше profession = уже названная профессия — the." },
+    { n:8,  seg:["There is ",0," hotel not far from our house. ",1," hotel is very comfortable."], ans:["a","the"],
+      note:"первое упоминание — a; второе упоминание того же отеля — the." },
+    { n:9,  seg:[0," car is very expensive."], ans:["the"],
+      note:"ясно из ситуации, о какой машине речь (та, которую смотрим) — the." },
+    { n:10, seg:["I'm doing ",0," exercise. ",1," exercise isn't difficult."], ans:["an","the"],
+      note:"первое упоминание, гласный звук [e] — an; второе упоминание — the." },
+    { n:11, seg:["They are building ",0," international airport here."], ans:["an"],
+      note:"аэропорт упоминается впервые, перед гласным звуком [ɪ] — an." },
+    { n:12, seg:["Without any warning ",0," computer went down."], ans:["the"],
+      note:"тот самый компьютер, за которым работали — ясно из ситуации — the." },
+    { n:13, seg:[0," child is reading ",1," magazine. ",2," magazine has ",3," bright cover."], ans:["the|a","a","the","a"],
+      note:"по ключу учебника — The child: ребёнок понятен из ситуации (вариант A child тоже засчитывается); magazine — первое упоминание — a; во втором предложении — the; обложка упоминается впервые — a." },
+    { n:14, seg:["Bill is ",0," very good specialist. I'm sure he can answer ",1," question."], ans:["a","the"],
+      note:"specialist упоминается впервые — a; question ясен из ситуации (тот, что задали) — the." },
+    { n:15, seg:["They say ",0," library that is being built here will be very large."], ans:["the"],
+      note:"уточняющее определение that is being built here указывает на конкретную библиотеку — the." }
+  ]},
+  { id:"1.2 · ч.1", instr:'Вставьте артикли, где это необходимо: <b class="wa">a / an</b>, <b class="wt">the</b> или <b class="wz">Ø (без артикля)</b>.', opts:["a","an","the","Ø"], items:[
+    { n:1,  seg:["These are ",0," very nice shoes."], ans:["Ø"],
+      note:"множественное число, первое упоминание — артикль не нужен (как These are cats в таблице Unit 1). В ключе учебника этот пункт пропущен: там девять ответов, и они соответствуют предложениям 2–10." },
+    { n:2,  seg:[0," questions are very difficult."], ans:["the"],
+      note:"речь о конкретных вопросах, понятных из ситуации (те, что нам задали) — the." },
+    { n:3,  seg:[0," stories I must read are long."], ans:["the"],
+      note:"множественное число, но с уточнением: какие именно? — те, что я должен прочитать — the." },
+    { n:4,  seg:["I need ",0," comfortable chairs."], ans:["Ø"],
+      note:"множественное число, неопределённые («какие-нибудь стулья») — Ø." },
+    { n:5,  seg:["We are looking for ",0," children. Have you seen them?"], ans:["the"],
+      note:"ясно, о каких детях речь (наши — о них же them во втором предложении) — the." },
+    { n:6,  seg:["Why do you like ",0," small flats?"], ans:["Ø"],
+      note:"множественное число в общем смысле (любые маленькие квартиры) — Ø." },
+    { n:7,  seg:["Put ",0," cups on the table."], ans:["the"],
+      note:"конкретные чашки (вот эти, здесь) — ясно из ситуации — the." },
+    { n:8,  seg:["Let's give them ",0," cups and ",1," saucers for their wedding."], ans:["Ø","Ø"],
+      note:"множественное число, неопределённые («какие-нибудь чашки и блюдца») — Ø." },
+    { n:9,  seg:["They sell ",0," bicycles here."], ans:["Ø"],
+      note:"множественное число в общем смысле (что продают? — велосипеды) — Ø." },
+    { n:10, seg:["They are ",0," very strange people."], ans:["Ø"],
+      note:"множественное число в роли именной части сказуемого — Ø." }
+  ]},
+  { id:"1.2 · ч.2", instr:'Вставьте артикли, где это необходимо: <b class="wa">a / an</b>, <b class="wt">the</b> или <b class="wz">Ø (без артикля)</b>.', opts:["a","an","the","Ø"], items:[
+    { n:1,  seg:["Do you know where ",0," my watch is?"], ans:["Ø"],
+      note:"перед существительным уже стоит притяжательное местоимение my — «место занято», артикль не нужен." },
+    { n:2,  seg:[0," Kate's husband is ",1," doctor. They are all ",2," doctors in ",3," their family."], ans:["Ø","a","Ø","Ø"],
+      note:"перед Kate's (притяжательный падеж) и перед their — Ø; профессия в единственном числе — a; doctors во мн. числе — Ø." },
+    { n:3,  seg:["These are ",0," very good examples. Study ",1," examples."], ans:["Ø","the"],
+      note:"первое упоминание во мн. числе — Ø; во втором предложении те же примеры (повторное упоминание) — the." },
+    { n:4,  seg:[0," papers you need are on the table."], ans:["the"],
+      note:"уточнение you need указывает на конкретные бумаги — the." },
+    { n:5,  seg:["He has ",0," long name and I can never remember it."], ans:["a"],
+      note:"единственное число, первое упоминание («какое-то длинное имя») — a." },
+    { n:6,  seg:["There is ",0," mistake in ",1," sentence. Correct ",2," mistake."], ans:["a","the","the"],
+      note:"mistake впервые — a; sentence ясна из ситуации (та, что перед нами) — the; mistake повторно — the." },
+    { n:7,  seg:["Can you tell me where ",0," station is."], ans:["the"],
+      note:"станция понятна из ситуации (ближайшая, нужная нам) — the." },
+    { n:8,  seg:["Who is ",0," driver of this car? You can't park ",1," cars here."], ans:["the","Ø"],
+      note:"driver уточнён: of this car — the; cars во мн. числе в общем смысле (любые машины) — Ø." },
+    { n:9,  seg:[0," keys to ",1," exercises you are doing now are on the next page."], ans:["the","the"],
+      note:"keys уточнены (to the exercises), exercises уточнены определением you are doing now — оба the. В ключе учебника здесь три ответа «the, the, the»: третий относится к уже напечатанному the next page." },
+    { n:10, seg:["Do you remember ",0," name of ",1," street where we bought this washing machine?"], ans:["the","the"],
+      note:"name уточнено (of the street), street уточнена определением where we bought… — оба the." },
+    { n:11, seg:["He says he needs ",0," new glasses. But ",1," glasses they sell here are very expensive."], ans:["Ø","the"],
+      note:"первое упоминание во мн. числе — Ø; второе упоминание с уточнением they sell here — the." },
+    { n:12, seg:["Remember to take ",0," jacket to the cleaner's."], ans:["the"],
+      note:"конкретная куртка (та, что в чистку) — ясно из ситуации — the." },
+    { n:13, seg:["They say ",0," party was a success."], ans:["the"],
+      note:"оба знают, о какой вечеринке речь (та, что прошла) — the." },
+    { n:14, seg:["Let's take ",0," photograph of Nick and July. They are ",1," nice couple."], ans:["a","a"],
+      note:"photograph — первое упоминание — a; couple — единственное число («пара») — a." },
+    { n:15, seg:["I'm going to ",0," airport. ",1," plane leaves in two hours."], ans:["the","the"],
+      note:"airport — известное обоим место (ясно из ситуации) — the; plane = мой самолёт, тот самый — the." },
+    { n:16, seg:["I liked ",0," presents I received on my birthday."], ans:["the"],
+      note:"уточняющее определение I received on my birthday указывает на конкретные подарки — the." }
+  ]}
+];
+
+/* ------------------------------------------------ build ------------------------------------------------ */
+const ANSW = {}, DISP = {}, ITEM_KEYS = {}, KEY_EL = {}, EX_TOTAL = {};
+DATA.forEach(ex => {
+  EX_TOTAL[ex.id] = ex.items.reduce((s,it)=>s+it.ans.length,0);
+  ex.items.forEach(it => {
+    const ik = ex.id + "/" + it.n;
+    ITEM_KEYS[ik] = it.ans.map((a,b)=>{ const k = ik + "/" + b; ANSW[k] = a.toLowerCase().split("|"); DISP[k] = a.split("|")[0]; return k; });
+  });
+});
+const TOTAL = Object.keys(ANSW).length;
+
+const sections = document.getElementById("sections");
+DATA.forEach(ex => {
+  const card = document.createElement("section"); card.className = "card";
+  const head = document.createElement("div"); head.className = "card-head";
+  head.innerHTML = '<span class="tag">УПР. ' + ex.id + '</span><span class="instr">' + ex.instr + '</span>' +
+                   '<span class="score-chip" id="sc-' + ex.id + '">0 / ' + EX_TOTAL[ex.id] + '</span>';
+  card.appendChild(head);
+  ex.items.forEach(it => {
+    const item = document.createElement("div"); item.className = "item";
+    const ik = ex.id + "/" + it.n; item.dataset.ik = ik;
+    const num = document.createElement("span"); num.className = "num"; num.textContent = it.n; item.appendChild(num);
+    const sen = document.createElement("div"); sen.className = "sen";
+    it.seg.forEach((sg,i) => {
+      if (typeof sg === "string") { sen.appendChild(document.createTextNode(sg)); return; }
+      const s = document.createElement("select");
+      s.className = "blank" + (i === 0 ? " cap" : "");
+      const k = ik + "/" + sg;
+      s.dataset.key = k;
+      s.innerHTML = '<option value="">…</option>' + ex.opts.map(o => '<option value="'+o+'">'+o+'</option>').join("");
+      s.addEventListener("change", onChange);
+      KEY_EL[k] = s; sen.appendChild(s);
+    });
+    item.appendChild(sen);
+    const note = document.createElement("div"); note.className = "note";
+    note.innerHTML = "<b>Почему:</b> " + it.note;
+    item.appendChild(note);
+    card.appendChild(item);
+  });
+  sections.appendChild(card);
+});
+const ALL = Object.values(KEY_EL);
+
+/* ------------------------------------------------ logic ------------------------------------------------ */
+const bar = document.getElementById("bar"), barFill = document.getElementById("barFill"),
+      scoreLbl = document.getElementById("scoreLbl"), toast = document.getElementById("toast"),
+      imm = document.getElementById("immChk");
+let toastTimer = null;
+
+function gradeBlank(s){
+  s.classList.remove("ok","wrong","miss");
+  if (!s.value) { s.classList.add("miss"); return false; }
+  const ok = ANSW[s.dataset.key].includes(s.value.toLowerCase());
+  if (ok) s.classList.add("ok");
+  else { void s.offsetWidth; s.classList.add("wrong"); }
+  return ok;
+}
+function refreshItems(){
+  document.querySelectorAll(".item").forEach(it => {
+    const els = ITEM_KEYS[it.dataset.ik].map(k => KEY_EL[k]);
+    it.classList.toggle("done", els.length > 0 && els.every(s => s.classList.contains("ok")));
+  });
+}
+function refreshScores(){
+  let okAll = 0;
+  DATA.forEach(ex => {
+    let ok = 0;
+    ex.items.forEach(it => ITEM_KEYS[ex.id + "/" + it.n].forEach(k => { if (KEY_EL[k].classList.contains("ok")) ok++; }));
+    document.getElementById("sc-" + ex.id).textContent = ok + " / " + EX_TOTAL[ex.id];
+    okAll += ok;
+  });
+  const revealed = document.body.classList.contains("revealed");
+  scoreLbl.textContent = revealed ? ("Ответы показаны · " + TOTAL + " / " + TOTAL) : ("Верно: " + okAll + " / " + TOTAL);
+  barFill.style.width = (okAll / TOTAL * 100) + "%";
+  bar.classList.toggle("full", okAll === TOTAL);
+  return okAll;
+}
+function showToast(msg, dark){
+  toast.textContent = msg;
+  toast.classList.toggle("dark", !!dark);
+  toast.classList.add("show");
+  clearTimeout(toastTimer); toastTimer = setTimeout(()=>toast.classList.remove("show"), 4200);
+}
+function onChange(e){
+  const s = e.target;
+  s.dataset.v = s.value;
+  s.classList.remove("ok","wrong","miss");
+  if (imm.checked && s.value) gradeBlank(s);
+  refreshItems(); refreshScores(); save();
+}
+document.getElementById("checkBtn").addEventListener("click", () => {
+  ALL.forEach(s => gradeBlank(s));
+  refreshItems();
+  const ok = refreshScores(); save();
+  if (ok === TOTAL) showToast("🎉 Отлично! Все " + TOTAL + " пропусков — верно!");
+  else showToast("Проверено: верно " + ok + " из " + TOTAL + ". Ошибки подсвечены красным, пустые — жёлтым.", true);
+});
+document.getElementById("revealBtn").addEventListener("click", () => {
+  document.body.classList.add("revealed");
+  ALL.forEach(s => { s.value = DISP[s.dataset.key]; s.dataset.v = s.value; s.classList.remove("wrong","miss"); s.classList.add("ok"); s.disabled = true; });
+  refreshItems(); refreshScores(); save();
+});
+document.getElementById("resetBtn").addEventListener("click", () => {
+  document.body.classList.remove("revealed");
+  toast.classList.remove("show");
+  ALL.forEach(s => { s.value = ""; s.dataset.v = ""; s.classList.remove("ok","wrong","miss"); s.disabled = false; });
+  refreshItems(); refreshScores(); save();
+});
+imm.addEventListener("change", () => {
+  if (imm.checked) ALL.forEach(s => { if (s.value && !s.disabled) gradeBlank(s); });
+  refreshItems(); refreshScores(); save();
+});
+
+/* ------------------------------------------------ persistence (guarded) ------------------------------------------------ */
+function save(){
+  try {
+    const vals = {}; ALL.forEach(s => { if (s.value) vals[s.dataset.key] = s.value; });
+    localStorage.setItem("unit1-articles", JSON.stringify({ vals, imm: imm.checked, revealed: document.body.classList.contains("revealed") }));
+  } catch(e) {}
+}
+function load(){
+  try {
+    const st = JSON.parse(localStorage.getItem("unit1-articles") || "null");
+    if (!st) return;
+    imm.checked = !!st.imm;
+    Object.entries(st.vals || {}).forEach(([k,v]) => { if (KEY_EL[k]) { KEY_EL[k].value = v; KEY_EL[k].dataset.v = v; } });
+    if (st.revealed) document.getElementById("revealBtn").click();
+  } catch(e) {}
+}
+load();
+refreshItems(); refreshScores();
+</script>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a5a724f3dc1a9db8',t:'MTc5NDY3MTEzNw=='};var l=window.parent.location,o;try{o=new URL(l.origin).origin}catch(e){try{o=new URL(new URL(l.href).origin).origin}catch(e){o=''}}var u='/cdn-cgi/challenge-platform/scripts/jsd/main.js?ray=a5a724f3dc1a9db8',a=document.createElement('script');a.src=o?new URL(u,o).href:u;document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
